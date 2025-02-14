@@ -1,0 +1,26 @@
+body {
+    background-color: #F3F3F3;
+}
+
+header {
+    background-color: #fff;
+    height: 80px;
+    width: 100%;
+    position: fixed;
+    padding-left: 21px;
+    box-shadow: 0px 4px 6px 0px #0000000D;
+    display: flex;
+    justify-content: space-between;
+    padding-top: 10px;
+}
+
+.logo {
+    height: 53px;
+    width: 75px;
+}
+
+#people {
+    height: 45px;
+    width: 45px;
+    padding-right: 50px;
+}
