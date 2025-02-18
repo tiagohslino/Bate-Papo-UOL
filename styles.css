@@ -4,7 +4,7 @@ body {
 
 header {
     background-color: #fff;
-    height: 80px;
+    height: 70px;
     width: 100%;
     position: fixed;
     padding-left: 21px;
@@ -12,6 +12,7 @@ header {
     display: flex;
     justify-content: space-between;
     padding-top: 10px;
+    align-items: center;
 }
 
 .logo {
@@ -23,4 +24,18 @@ header {
     height: 45px;
     width: 45px;
     padding-right: 50px;
+}
+
+.main-chat {
+    position: fixed;
+    margin-top:106px;
+    height: auto;
+    width: 100%;
+}
+
+.msg {
+    background-color: #DCDCDC;
+    width: 100%;
+    height: 40px;
+    border-radius: 2px;
 }
