@@ -1,5 +1,14 @@
-const allUsers =     
-    {name: "fazer o queeee", age: "22"};
+const participants = [
+    { name: "okjaojao", age: 11 },
+    { name: "ok", age: 22 },
+  ];
 
-const promise = axios.post("https://mock-api.driven.com.br/api/v6/uol/participants/cfa360a9-8b93-4bd9-b601-debbb28197a4", allUsers);
-console.log(promise);
+  participants.forEach(participant => {
+    axios.post('https://mock-api.driven.com.br/api/v6/uol/participants/a9c569cf-b76f-4a31-88b1-fb7da3f1e93f/', participant)
+      .then(response => {
+        // Lide com a resposta da API para este participante
+      })
+      .catch(error => {
+        // Lide com erros para este participante
+      });
+  });
