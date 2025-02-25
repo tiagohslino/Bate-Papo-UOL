@@ -1,33 +1,65 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="stylesheet" type="text/css" href="reset.css" />
-    <link rel="stylesheet" type="text/css" href="styles.css" /> 
-    
-    <title>Bate Papo UOL</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/reset.css/">
+  <link rel="stylesheet" href="/styles.css/">
+  <title>Bate-Papo UOL</title>
 </head>
-
 <body>
-    <header>
-        <img src="img\logo-bate-papo-uol.png" class="logo"></img>
-        <ion-icon name="people-sharp" id="people"></ion-icon>
-    </header>
+  <header class="header">
+    <img class="header-logo" src="/img/logo-bate-papo-uol.png/">
+    <ion-icon class="icon-sidebar" onclick="activeSidebar()"></ion-icon>
+  </header>
 
-    
-        <section class="main-chat">
-            <div class="msg">João entrou na sala.kk</div>
-            <div class="msg">João entrou na sala.kk</div>
-            <div class="msg">João entrou na sala.kk</div>
-            <div class="msg">João entrou na sala.kk</div>
+  <div class="sidebar hidden">
+    <div class="left-side" onclick="disableSidebar()"></div>
+    <nav class="right-side">
+      <div class="contacts">
+        <h3>Selecione um contato para enviar mensagem:</h3>
+      </div>
+      <ul class="select-contacts"></ul>
+      <div class="visibility">
+        <h3>Defina a visibilidade:</h3>
+      </div>
+      <ul class="select-visibility">
+        <li class="public" onclick="selectVisibility(this)">
+          <div class="selection-container">
+            <ion-icon class="visibility-icon"></ion-icon>
+            <h5 class="to">Público</h5>
+          </div>
+        </li>
+        <li class="private" onclick="selectVisibility(this)">
+          <div class="selection-container">
+            <ion-icon class="visibility-icon"></ion-icon>
+            <h5 class="to">Reservadamente</h5>
+          </div>
+        </li>
+      </ul>
+    </nav>
+  </div>
 
-        </section>
+  <main>
+    <ul class="container-messages"></ul>
+  </main>
 
-    <footer>
-        <div>Teste footer</div>
-    </footer>
+  <footer class="footer">
+    <div class="send-message-container"></div>
+    <ion-icon class="send-message-icon" name="paper-plane-outline" onclick="sendMessage()"></ion-icon>
+  </footer>
+
+  <script src="https://unpkg.com/ionicons@5.4.0/dist/ionicons.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script src="src/scripts/script.js"></script>
+</body>
+</html>
         
 
     
