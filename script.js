@@ -138,16 +138,20 @@ function sendMessage() {
   });
 }
 
-function activateSidebar() {
-  let click = document.querySelector(".sidebar");
-  if (click === true) {
-    
-    click.classList.remove("hidden");
+function activeSidebar() {
+  const sidebar = document.querySelector(".sidebar"); // Obtém o elemento
+
+  if (sidebar && sidebar.classList.contains("hidden")) { // Verifica se existe e tem a classe "hidden"
+    sidebar.classList.remove("hidden");
   }
 }
 
 function disableSidebar() {
-  document.querySelector(".sidebar").classList.add("hidden");
+  const sidebar = document.querySelector(".sidebar"); // Obtém o elemento
+
+  if (sidebar) { // Verifica se o elemento existe
+    sidebar.classList.add("hidden");
+  }
 }
 
 function getParticipants() {
@@ -191,10 +195,11 @@ function renderParticipants(participants) {
 function selectRecipient(divParticipant) {
   forWho = divParticipant.querySelector(".to").innerHTML;
 
-  const previousClick = document.querySelector(".users-contacts .selected");
+  // Remove o ícone de seleção anterior
+  const previousSelection = document.querySelector(".users-contacts .selected"); // Busca o ícone selecionado anteriormente
 
-  if (previousClick === true) {
-    previousClick.remove();
+  if (previousSelection) { // Verifica se ele existe
+    previousSelection.remove(); // Remove o ícone
   }
 
   divParticipant.innerHTML +=
@@ -205,14 +210,14 @@ function selectRecipient(divParticipant) {
 
 function selectVisibility(divVisibility) {
   toPeople = divVisibility.querySelector(".to").innerHTML;
-  const previousClick = document.querySelector(".select-visibility .selected");
+  const previousSelection = document.querySelector(".select-visibility .selected"); // Busca o ícone selecionado anteriormente
 
   if (toPeople === "Reservadamente") {
     type = "private_message";
   }
 
-  if (previousClick === true) {
-    previousClick.remove();
+  if (previousSelection) { // Verifica se ele existe
+    previousSelection.remove(); // Remove o ícone
   }
 
   divVisibility.innerHTML +=
