@@ -5,109 +5,133 @@ let toPeople = "Público";
 
 userName = prompt("Qual seu nome de usuario?");
 
-let promise = axios.post(`https://mock-api.driven.com.br/api/v6/uol/participants/f35d9f1b-ab28-4890-9ffc-4ba4120b6e8d/`, { name: userName });
+let promise = axios.post(`https://mock-api.driven.com.br/api/v6/uol/participants/d15a3dd8-368f-4e2c-abf2-d7200f0a1432/`, { name: userName });
 
-promise.then(loadingMessages);
-promise.catch(showErrors);
+promise.then(loadingMessages).catch(showErrors);
 
 function showErrors(err) {
-  let error = err.response.status;
-
-  if (userName === "" && error === 400) {
-    alert(`Usuário não pode estar em branco! Tente novamente`);
+    console.error("Erro ao registrar usuário:", err);
+    if (err.response) {
+        const { status, data } = err.response;
+        if (userName === "" && status === 400) {
+            alert(`Usuário não pode estar em branco! Tente novamente`);
+        } else if (status === 400) {
+            alert(`Este usuário já existe na sala... digite outro!`);
+        } else {
+            alert(`Erro ${status}: ${data}`);
+        }
+    } else {
+        alert("Erro desconhecido ao registrar usuário.");
+    }
     window.location.reload();
-  } else if (error === 400) {
-    alert(`Este usuário já existe na sala... digite outro!`);
-    window.location.reload();
-  }
 }
 
 function loadingMessages() {
-  getMessages();
-  getParticipants();
-  showsTheRecipient();
+    console.log("loadingMessages chamada");
+    getMessages();
+    getParticipants();
+    showsTheRecipient();
 
-  setInterval(getMessages, 3000);
-  setInterval(keepConnected, 5000);
-  setInterval(getParticipants, 10000);
+    setInterval(getMessages, 3000);
+    setInterval(keepConnected, 5000);
+    setInterval(getParticipants, 10000);
 }
 
 function keepConnected() {
-  let promise = axios.post(`https://mock-api.driven.com.br/api/v6/uol/status/f35d9f1b-ab28-4890-9ffc-4ba4120b6e8d/`, { name: userName });
+    let promise = axios.post(`https://mock-api.driven.com.br/api/v6/uol/status/d15a3dd8-368f-4e2c-abf2-d7200f0a1432/`, { name: userName });
 
-  promise.then(function(res) {
-    const { status, statusText } = res;
-  });
-  promise.catch(function(err) {
-    const error = err.response.status;
-    alert(`Erro ${error}: Usuário desconectado por inatividade`);
-  });
+    promise.then(res => {
+        console.log("Status mantido:", res.status);
+    }).catch(err => {
+        console.error("Erro ao manter status:", err);
+        if (err.response) {
+            const { status } = err.response;
+            alert(`Erro ${status}: Usuário desconectado por inatividade`);
+        } else {
+            alert("Erro desconhecido ao manter status.");
+        }
+    });
 }
 
 function getMessages() {
-  const promise = axios.get(`https://mock-api.driven.com.br/api/v6/uol/messages/f35d9f1b-ab28-4890-9ffc-4ba4120b6e8d/`);
+    console.log("getMessages chamada");
+    const promise = axios.get(`https://mock-api.driven.com.br/api/v6/uol/messages/d15a3dd8-368f-4e2c-abf2-d7200f0a1432/`);
 
-  promise.then(function(res) {
-    createsTheMessages(res.data);
-    scrollMessages();
-  });
-  promise.catch(function(err) {
-    const { status, data } = err.response;
-    alert(`${data} Erro ${status} - Problema ao carregar as mensagens do chat`);
-    window.location.reload();
-  });
+    promise.then(res => {
+        console.log("Mensagens recebidas:", res.data);
+        createsTheMessages(res.data);
+        scrollMessages();
+    }).catch(err => {
+        console.error("Erro ao obter mensagens:", err);
+        if (err.response) {
+            const { status, data } = err.response;
+            alert(`${data} Erro ${status} - Problema ao carregar as mensagens do chat`);
+        } else {
+            alert("Erro desconhecido ao obter mensagens.");
+        }
+        window.location.reload();
+    });
 }
 
 function createsTheMessages(allMessages) {
-  let divMessages = document.querySelector(".container-messages");
+    console.log("createsTheMessages chamada");
+    let divMessages = document.querySelector(".container-messages");
+    let messagesHTML = "";
 
-  for (let i = 0; i < allMessages.length; i++) {
-    const message = allMessages[i];
-    const { from, time, text, to, type } = message;
+    for (let i = 0; i < allMessages.length; i++) {
+        const message = allMessages[i];
+        const { from, time, text, to, type } = message;
 
-    if (type === "status") {
-      divMessages.innerHTML += `
-        <li class="display-message status-message">
-          <span class="message">
-            <span class="time">(${time})</span>
-            <span class="users"><b class="bold-text">${from}</b></span>
-            <span class="text">${text}</span>
-          </span>
-        </li>
-      `;
-    } else if (type === "message") {
-      divMessages.innerHTML += `
-        <li class="display-message regular-message">
-          <span class="message">
-            <span class="time">(${time})</span>
-            <span class="users">
-              <b class="bold-text">${from}</b> para <b class="bold-text">${to}</b>:
-            </span>
-            <span class="text"> ${text}</span>
-          </span>
-        </li>
-      `;
-    } else if (type === "private_message") {
-      if (from === userName || to === userName) {
-        divMessages.innerHTML += `
-          <li class="display-message private-message">
-            <span class="message">
-              <span class="time">(${time})</span>
-              <span class="users">
-                <b class="bold-text">${from}</b> reservadamente para 
-                <b class="bold-text">${to}</b>:
-              </span>
-              <span class="text"> ${text}</span>
-            </span>
-          </li>
-        `;
-      }
+        if (type === "status") {
+            messagesHTML += `
+                <li class="display-message status-message">
+                    <span class="message">
+                        <span class="time">(${time})</span>
+                        <span class="users"><b class="bold-text">${from}</b></span>
+                        <span class="text">${text}</span>
+                    </span>
+                </li>
+            `;
+        } else if (type === "message") {
+            messagesHTML += `
+                <li class="display-message regular-message">
+                    <span class="message">
+                        <span class="time">(${time})</span>
+                        <span class="users">
+                            <b class="bold-text">${from}</b> para <b class="bold-text">${to}</b>:
+                        </span>
+                        <span class="text"> ${text}</span>
+                    </span>
+                </li>
+            `;
+        } else if (type === "private_message") {
+            if (from === userName || to === userName) {
+                messagesHTML += `
+                    <li class="display-message private-message">
+                        <span class="message">
+                            <span class="time">(${time})</span>
+                            <span class="users">
+                                <b class="bold-text">${from}</b> reservadamente para 
+                                <b class="bold-text">${to}</b>:
+                            </span>
+                            <span class="text"> ${text}</span>
+                        </span>
+                    </li>
+                `;
+            }
+        }
     }
-  }
+
+    console.log("HTML gerado:", messagesHTML);
+    divMessages.innerHTML = messagesHTML;
+    console.log("innerHTML definido:", divMessages.innerHTML);
 }
 
 function scrollMessages() {
-  document.querySelector(".container-messages").lastElementChild.scrollIntoView();
+    const container = document.querySelector(".container-messages");
+    if (container.lastElementChild) {
+        container.lastElementChild.scrollIntoView();
+    }
 }
 
 function sendMessage() {
@@ -125,7 +149,7 @@ function sendMessage() {
     type: type,
   };
 
-  let promise = axios.post(`https://mock-api.driven.com.br/api/v6/uol/messages/f35d9f1b-ab28-4890-9ffc-4ba4120b6e8d/`, body);
+  let promise = axios.post(`https://mock-api.driven.com.br/api/v6/uol/messages/d15a3dd8-368f-4e2c-abf2-d7200f0a1432/`, body);
 
   promise.then(function(res) {
     scrollMessages();
@@ -139,23 +163,23 @@ function sendMessage() {
 }
 
 function activeSidebar() {
-  const sidebar = document.querySelector(".sidebar"); // Obtém o elemento
+  const sidebar = document.querySelector(".sidebar"); 
 
-  if (sidebar && sidebar.classList.contains("hidden")) { // Verifica se existe e tem a classe "hidden"
+  if (sidebar && sidebar.classList.contains("hidden")) { 
     sidebar.classList.remove("hidden");
   }
 }
 
 function disableSidebar() {
-  const sidebar = document.querySelector(".sidebar"); // Obtém o elemento
+  const sidebar = document.querySelector(".sidebar"); 
 
-  if (sidebar) { // Verifica se o elemento existe
+  if (sidebar) { 
     sidebar.classList.add("hidden");
   }
 }
 
 function getParticipants() {
-  const promise = axios.get(`https://mock-api.driven.com.br/api/v6/uol/participants/f35d9f1b-ab28-4890-9ffc-4ba4120b6e8d/`);
+  const promise = axios.get(`https://mock-api.driven.com.br/api/v6/uol/participants/d15a3dd8-368f-4e2c-abf2-d7200f0a1432/`);
 
   promise.then(function(res) {
     renderParticipants(res.data);
@@ -195,11 +219,10 @@ function renderParticipants(participants) {
 function selectRecipient(divParticipant) {
   forWho = divParticipant.querySelector(".to").innerHTML;
 
-  // Remove o ícone de seleção anterior
-  const previousSelection = document.querySelector(".users-contacts .selected"); // Busca o ícone selecionado anteriormente
+  const previousSelection = document.querySelector(".users-contacts .selected"); 
 
-  if (previousSelection) { // Verifica se ele existe
-    previousSelection.remove(); // Remove o ícone
+  if (previousSelection) { 
+    previousSelection.remove(); 
   }
 
   divParticipant.innerHTML +=
@@ -210,14 +233,14 @@ function selectRecipient(divParticipant) {
 
 function selectVisibility(divVisibility) {
   toPeople = divVisibility.querySelector(".to").innerHTML;
-  const previousSelection = document.querySelector(".select-visibility .selected"); // Busca o ícone selecionado anteriormente
+  const previousSelection = document.querySelector(".select-visibility .selected"); 
 
   if (toPeople === "Reservadamente") {
     type = "private_message";
   }
 
-  if (previousSelection) { // Verifica se ele existe
-    previousSelection.remove(); // Remove o ícone
+  if (previousSelection) { 
+    previousSelection.remove(); 
   }
 
   divVisibility.innerHTML +=
